@@ -12,7 +12,7 @@ try {
     const serviceAccountPath = path.join(__dirname, 'serviceAccountKey.json');
     const serviceAccount = require(serviceAccountPath);
 
-    if (admin.apps.length === 0) { 
+    if (admin.apps.length === 0) {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             storageBucket: process.env.FIREBASE_STORAGE_BUCKET
@@ -33,16 +33,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
+// --- Route Imports ---
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const sosRoutes = require('./routes/sos.routes');
 const businessRoutes = require('./routes/business.routes');
+const userRoutes = require('./routes/user.routes'); // <-- THIS LINE IS NEW
 
+// --- API Routes ---
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/sos', sosRoutes);
 app.use('/api/business', businessRoutes);
+app.use('/api/users', userRoutes); 
 
 const PORT = process.env.PORT || 8080;
 
