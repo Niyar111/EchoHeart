@@ -1,65 +1,69 @@
-
 const Post = require('../models/post.model');
-const User = require('../models/user.model');
+const admin = require('firebase-admin'); 
 
-const createPost = async (req, res) => {
+exports.createPost = async (req, res) => {
   try {
+    const { title, description, category, hasBusiness } = req.body;
+    const uploader = req.user._id; 
+    let imageUrl = ''; 
     
-    const { uid } = req.user;
-    
-    const { caption } = req.body;
-    
-    const imageUrl = req.file?.path;
-
-    
-    if (!imageUrl) {
-      return res.status(400).json({ message: 'An image file is required to create a post.' });
-    }
-
-   
-    const author = await User.findOne({ uid: uid });
-    if (!author) {
-      return res.status(404).json({ message: 'Author not found in our database.' });
-    }
-
-    
-    const newPost = new Post({
-      imageUrl: imageUrl,
-      caption: caption,
+    if (req.file) {
       
-      author: author._id,
-    });
+      const bucket = admin.storage().bucket();
+      
+      const filename = `${Date.now()}_${req.file.originalname}`;
+      const fileUpload = bucket.file(filename);
 
-   
-    await newPost.save();
+      
+      const blobStream = fileUpload.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        },
+      });
 
-    
-    res.status(201).json({
-      message: 'Post created successfully!',
-      post: newPost,
-    });
-  } catch (error) {
-    
-    console.error('Error creating post:', error);
-    res.status(500).json({ message: 'Server error while creating post.' });
+  
+      blobStream.on('error', (error) => {
+        console.error("Firebase Storage Error:", error);
+        return res.status(500).send('Something went wrong with the file upload.');
+      });
+
+      blobStream.on('finish', async () => {
+        
+        await fileUpload.makePublic();
+        imageUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+
+        await createAndSavePost(res, { title, description, category, hasBusiness, uploader, imageUrl });
+      });
+
+      blobStream.end(req.file.buffer);
+
+    } else {
+      await createAndSavePost(res, { title, description, category, hasBusiness, uploader, imageUrl });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 };
 
+async function createAndSavePost(res, postData) {
+    try {
+        const newPost = new Post(postData);
+        const post = await newPost.save();
+        res.status(201).json(post);
+    } catch (dbError) {
+        console.error("Database Save Error:", dbError.message);
+        res.status(500).send('Server error while saving the post.');
+    }
+}
 
-const getAllPosts = async (req, res) => {
+exports.getAllPosts = async (req, res) => {
   try {
-    
-    const posts = await Post.find({}).sort({ createdAt: -1 }).populate('author', 'name');
-
-    
-    res.status(200).json(posts);
-  } catch (error) {
-    
-    console.error('Error fetching posts:', error);
-    res.status(500).json({ message: 'Server error while fetching posts.' });
+    const posts = await Post.find().populate('uploader', ['fullname', 'village']);
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 };
-
-
-module.exports = { createPost, getAllPosts };
 
