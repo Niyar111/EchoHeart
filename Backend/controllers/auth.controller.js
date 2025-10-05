@@ -1,43 +1,68 @@
-
 const User = require('../models/user.model');
 
-
-const registerUser = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     
-    const { uid, email, name } = req.user;
+    const {
+      firebaseUid,
+      fullname,
+      email,
+      dob,
+      address1,
+      address2,
+      village,
+      district,
+      state,
+      pincode,
+      isTouristGuide,
+    } = req.body;
 
-    const existingUser = await User.findOne({ uid: uid });
+    
+    let user = await User.findOne({ firebaseUid });
 
-    if (existingUser) {
-      
-      return res.status(200).json({
-        message: 'Welcome back! User already exists.',
-        user: existingUser,
-      });
+    if (user) {
+      return res.status(400).json({ msg: 'User already exists' });
     }
 
-    const newUser = new User({
-      uid: uid,
-      name: name,
-      email: email,
-      
+    
+    user = new User({
+      firebaseUid,
+      fullname,
+      email,
+      dob,
+      address1,
+      address2,
+      village,
+      district,
+      state,
+      pincode,
+      isTouristGuide,
     });
 
-    
-    const savedUser = await newUser.save();
-    
-    res.status(201).json({
-      message: 'User registered successfully in our database!',
-      user: savedUser,
-    });
-  } catch (error) {
-    
-    console.error('Error in user registration:', error);
-    res.status(500).json({ message: 'Server error during user registration.' });
+    await user.save();
+
+    res.status(201).json(user);
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 };
 
 
-module.exports = { registerUser };
+exports.login = async (req, res) => {
+    try {
+        const { firebaseUid } = req.body;
+        const user = await User.findOne({ firebaseUid });
 
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found in our database. Please register.' });
+        }
+
+        res.json(user);
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};

@@ -1,11 +1,10 @@
-// --- Imports ---
+
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// --- NEW: Import the 'path' module ---
-// This module helps create reliable file paths
+
 const path = require('path');
 
 // --- NEW: Firebase Admin SDK Initialization ---
@@ -23,8 +22,7 @@ try {
   console.log('Firebase Admin SDK initialized successfully.');
 } catch (error) {
   console.warn('Warning: serviceAccountKey.json not found or invalid. Firebase Admin SDK not initialized.');
-  // You can decide if you want the app to exit if Firebase is critical
-  // process.exit(1);
+  
 }
 
 
@@ -53,10 +51,10 @@ app.use('/api/posts', postRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/emergency', emergencyRoutes);
 
-// --- Server Definition ---
+
 const PORT = process.env.PORT || 8080;
 
-// --- Start Server ---
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
