@@ -1,0 +1,123 @@
+{
+  "info": {
+    "name": "EchoHeart Auth Flow",
+    "_postman_id": "echoheart-auth-collection",
+    "description": "Register (phone), Verify OTP, Complete profile",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "phoneNumber",
+      "value": "+911234567890",
+      "type": "string"
+    },
+    {
+      "key": "otp",
+      "value": "123456",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - Register (phone only)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phoneNumber\": \"{{phoneNumber}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2 - Verify OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phoneNumber\": \"{{phoneNumber}}\",\n  \"otp\": \"{{otp}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3 - Complete Registration",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phoneNumber\": \"{{phoneNumber}}\",\n  \"fullname\": \"Alice Example\",\n  \"email\": \"alice@example.com\",\n  \"dob\": \"1990-01-01\",\n  \"address1\": \"123 Main St\",\n  \"district\": \"Some District\",\n  \"state\": \"Some State\",\n  \"pincode\": \"123456\",\n  \"village\": \"Some Village\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/complete",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "complete"
+          ]
+        }
+      }
+    }
+  ]
+}
