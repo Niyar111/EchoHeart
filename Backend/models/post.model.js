@@ -13,20 +13,18 @@ const postSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    
-    enum: ['art&craft', 'community-events', 'folklore'],
+    enum: ['art&craft', 'community-events', 'folklore', 'tourist-places', 'unique-food', 'local-items'],
   },
   imageUrl: {
     type: String,
-    required: true,
   },
-  
+  // This is the critical link to the author of the post.
+  // It must have a 'ref' that exactly matches the User model name.
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
+    ref: 'User', // This tells Mongoose to look in the 'users' collection
     required: true,
   },
-  
   hasBusiness: {
     type: Boolean,
     default: false,
@@ -37,3 +35,4 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model('Post', postSchema);
 module.exports = Post;
+

@@ -1,15 +1,17 @@
-// --- Imports ---
+
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
-const path = require('path');
-const admin = require('firebase-admin');
 
-// --- Configuration ---
+
+
+
 dotenv.config();
 
-// --- Firebase Admin SDK Initialization ---
+// --- REMOVED: Firebase Admin SDK Initialization ---
+/*
+// All this code block is removed as it's no longer used for Auth or general API features
 try {
     const serviceAccountPath = path.join(__dirname, 'serviceAccountKey.json');
     const serviceAccount = require(serviceAccountPath);
@@ -24,24 +26,26 @@ try {
 } catch (error) {
     console.warn('Warning: serviceAccountKey.json not found. Firebase features may be limited.');
 }
+*/
 
 // --- Database Connection ---
-connectDB();
+connectDB(); // Assuming this connects Mongoose
 
 // --- App Initialization ---
 const app = express();
 
 // --- Middleware ---
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Essential for parsing JSON request bodies
 
-// --- Route Imports ---
+// --- Route Imports (Keep these, they define your API endpoints) ---
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const sosRoutes = require('./routes/sos.routes');
 const businessRoutes = require('./routes/business.routes');
 const userRoutes = require('./routes/user.routes');
-const notificationRoutes = require('./routes/notification.routes'); // <-- THIS LINE IS NEW
+const notificationRoutes = require('./routes/notification.routes'); 
+const rescueRoutes = require('./routes/rescue.routes'); // <-- Recommend adding a route for your SDRF/NDRF contacts
 
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
@@ -49,13 +53,13 @@ app.use('/api/posts', postRoutes);
 app.use('/api/sos', sosRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/notifications', notificationRoutes); // <-- THIS LINE IS NEW
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/rescue', rescueRoutes); // <-- Added recommended route
 
 // --- Server Definition ---
-const PORT = process.env.PORT || 8080;
+const PORT = 3000;
 
 // --- Start Server ---
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
-
