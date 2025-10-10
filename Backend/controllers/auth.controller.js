@@ -7,6 +7,8 @@ exports.register = async (req, res) => {
       firebaseUid,
       fullname,
       email,
+      phoneNumber,       
+      isPhoneVerified,  
       dob,
       address1,
       address2,
@@ -17,18 +19,19 @@ exports.register = async (req, res) => {
       isTouristGuide,
     } = req.body;
 
-    
-    let user = await User.findOne({ firebaseUid });
+    let user = await User.findOne({ $or: [{ firebaseUid }, { phoneNumber }] });
 
     if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
+      return res.status(400).json({ msg: 'User with this ID or phone number already exists' });
     }
 
-    
+    // Create a new user instance with all the data
     user = new User({
       firebaseUid,
       fullname,
       email,
+      phoneNumber,       
+      isPhoneVerified,   
       dob,
       address1,
       address2,
@@ -39,8 +42,10 @@ exports.register = async (req, res) => {
       isTouristGuide,
     });
 
+    
     await user.save();
 
+    
     res.status(201).json(user);
 
   } catch (err) {
@@ -48,7 +53,6 @@ exports.register = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
-
 
 exports.login = async (req, res) => {
     try {
@@ -66,3 +70,4 @@ exports.login = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
