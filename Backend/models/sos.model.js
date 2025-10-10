@@ -21,7 +21,7 @@ const sosSchema = new mongoose.Schema({
   alertType: {
     type: String,
     required: true,
-    enum: ['flood', 'earthquake', 'landslide', 'personal-safety'], 
+    enum: ['flood', 'earthquake', 'landslide', 'personal-safety'],
   },
   message: {
     type: String,
@@ -37,7 +37,16 @@ const sosSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  isEmergency: {
+    type: Boolean,
+    default: false,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false, 
+  },
 }, {
+  
   timestamps: true,
 });
 
