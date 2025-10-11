@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     phoneOtpExpires: { type: Date, select: false },
     isPhoneVerified: { type: Boolean, default: false },
 
-    // --- Core User Details (optional at initial registration) ---
+    // --- Core Profile Details ---
     fullname: { 
         type: String, 
         trim: true 
@@ -29,16 +29,16 @@ const userSchema = new mongoose.Schema({
         default: 'user' 
     },
     
-    // --- Geo-Location & Address Details (Fields previously included in JSON) ---
+    // --- Geo-Location & Address Details ---
     district: { 
         type: String,
         trim: true
     },
-    state: { // Added
+    state: { 
         type: String,
         trim: true
     },
-    pincode: { // Added
+    pincode: { 
         type: String,
         trim: true,
         validate: {
@@ -49,19 +49,38 @@ const userSchema = new mongoose.Schema({
             message: props => `${props.value} is not a valid Pincode length!`
         }
     },
-    address1: { // Added
+    address1: { 
         type: String,
         trim: true
     },
-    village: { // Added
+    village: { 
         type: String,
-        trim: true // Making village optional
+        trim: true
     },
-    dob: { // Added
+    dob: { 
         type: Date,
+    },
+    
+    // 🚨 NEW FEATURE: User's Current Live Location for SOS and Mapping
+    currentLocation: {
+        type: {
+            type: String,
+            enum: ['Point'], // GeoJSON type
+            default: 'Point',
+        },
+        // Stored as [longitude, latitude]. Mongoose recommends this order.
+        coordinates: { 
+            type: [Number],
+            index: '2dsphere', // Critical for fast geospatial queries (e.g., finding nearby users)
+        },
+        lastUpdated: {
+            type: Date,
+            default: Date.now,
+        }
     }
 
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
-module.exports = User;
+module.exports = User; 
+ 
