@@ -27,9 +27,10 @@ const sendSms = async (to, body) => {
     // 1. Check if the client was initialized (based on .env check)
     if (!client) {
         console.error(`SMS service disabled. Cannot send SMS to ${to}.`);
-        // Instead of throwing an initialization error, throw a controlled error or return true
-        // to allow the application flow to continue in case of missing credentials (dev environment).
-        throw new Error('Twilio service is uninitialized due to missing credentials.');
+        // In development or when credentials are missing, do not block the flow.
+        // Log the message and return a fake resolved value so controllers can continue.
+        console.warn('SMS service is uninitialized; skipping actual send.');
+        return { sid: 'fake-sid-for-dev', to, body };
     }
     
     try {
