@@ -2,15 +2,31 @@ import React from 'react'
 import { Plus, Eye } from 'lucide-react'
 import VillageImage from '../assets/homePageImageForVillage.jpg'
 import TouristGuide from '../assets/touristGuide.jpg'
+import TouristGuider from '../assets/touristGuidePerson.jpg'
 import Circle from '../utils/circle'
 import Jaapi from '../assets/Gapi.png'
-import Search from '../components/search'
+import gsap from 'gsap/all'
+import { useEffect } from 'react'
 const Home = () => {
 
+  useEffect(() => {
+
+    const cursor = document.querySelector(".cursor-follower")
+
+    window.addEventListener('mousemove', (e) => {
+      // using the GSAP power to animate some properties
+      gsap.to(cursor, {
+        x: e.clientX - 20 / 2,
+        y: e.clientY - 20 / 2,
+        duration: 0.7,
+        ease: 'power4',
+      });
+    });
+  }, [])
 
   return (
     <div className='relative min-h-full  w-full overflow-hidden ' >
-
+      <div className="cursor-follower w-[20px] rounded-full fixed z-12 top-0 left-0 h-[20px] bg-yellow-400 pointer-events-none mix-blend-exclusion"></div>
 
       <div>
 
@@ -18,23 +34,24 @@ const Home = () => {
 
       {/* circled */}
       <div className="landing-page overflow-hidden relative  pt-[11rem] h-screen w-full flex items-center flex-col gap-12">
-        <div
+        {/* <div
           className="circle moving  border-8 border-[#000000] bg-[#000] rounded-full absolute z-2 bottom-0 left-[80%] h-[30rem] w-[30rem]"
           style={{
             filter: 'blur(8px)',
             boxShadow: '0 0 40px 20px #22c55e88',
           }}
-        ></div>
+        ></div> */}
 
 
         {/* first phase */}
         <div
-          className="showcase w-[80%] h-[18rem] bg-green-300 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden text-white " 
-          style={{
-            backgroundImage: `url(${VillageImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+
+          className="showcase w-[80%] h-[18rem] bg-green-300 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden text-white "
+          // style={{
+          //   backgroundImage: `url(${VillageImage})`,
+          //   backgroundSize: 'cover',
+          //   backgroundPosition: 'center',
+          // }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#00000088] to-[#ffffff30] rounded-2xl hover:bg-black transition-colors duration-700 ease-in-out"></div>
           <h1 className="relative text-white text-5xl font-bold z-10">Welcome, Paramjit Saikia</h1>
@@ -44,45 +61,95 @@ const Home = () => {
         {/* second phase */}
 
         <div className="features flex justify-evenly w-full">
-          <div className="create-new w-[8rem] h-[8rem] border-1 rounded-2xl flex items-center justify-center">
-            <Plus />
+          <div
+            onMouseEnter={() => {
+              gsap.to(".cursor-follower", {
+                scale: 6,
+                backgroundBlendMode:"color",
+              });
+              // gsap.to(".create-new", {
+              //   backgroundColor: "#22c55e",
+              //   color: "#000",
+              //   duration: 0.4,
+              // });
+            }}
+            onMouseLeave={() => {
+              gsap.to(".cursor-follower", {
+                scale: 1,
+              });
+              // gsap.to(".create-new", {
+              //   backgroundColor: "#000",
+              //   color: "#fff",
+              //   duration: 0.4,
+              // });
+            }}
+            className={`group create-new w-[14rem] h-[18rem] border-1 rounded-2xl flex flex-col items-center justify-center cursor-none hover:shadow-[inset_1px_4px_20px_4px_white] hover:transition-colours hover:duration-700 bg-black text-white gap-4 `}
+            style={{ transition: "background 0.4s, color 0.4s" }}
+          >
+            <Plus className='group-hover:scale-400 hidden bg-blend-exclusion group-hover:block transition-transform duration-600 ' />
+            <p className="group-hover:hidden">Create a Blog</p>
+            <p className='group-hover:hidden'>Preserve your Culture</p>
           </div>
-          <div className="legacy library w-[8rem] h-[8rem] border-1 rounded-2xl flex items-center justify-center">
-            <h1>
+          <div className="legacy group flex-col gap-1 library w-[14rem] h-[18rem] border-1 rounded-2xl flex items-center justify-between">
+            <div className="objects h-[70%] w-[80%] grid  grid-cols-2 grid-rows-2 gap-4 mt-4">
+              <div className='bg-[#dddcdc] w-full rounded-3xl group-hover:scale-110 transition-transform duration-500'></div>
+              <div className='bg-[#dddcdc] w-full rounded-3xl group-hover:scale-110 transition-transform duration-500'></div>
+              <div className='bg-[#dddcdc] w-full rounded-3xl group-hover:scale-110 transition-transform duration-500'></div>
+              <div className='bg-[#dddcdc] w-full rounded-3xl group-hover:scale-110 transition-transform duration-500'></div>
+              <div className='bg-[#dddcdc] w-full rounded-3xl group-hover:scale-110 transition-transform duration-500'></div>
+            </div>
+            <h1 className='bg-[#ffbf00] group-hover:bg-[#000] group-hover:text-white text-black w-full h-[20%] rounded-b-2xl text-center text-2xl font-bold flex items-center justify-center'>
               Lagacy Library
             </h1>
           </div>
-          <div className="touristGuide w-[8rem] h-[8rem] border-1 rounded-2xl flex items-center justify-center">
+          <div className="touristGuide bg-black bg-[url(../assets/touristGuidePerson.jpg)] w-[14rem] h-[18rem] border-1 rounded-2xl flex items-center justify-center">
             <h1>
               Tourist Guide
             </h1>
           </div>
-          <div className="asos w-[8rem] h-[8rem] border-1 rounded-2xl flex items-center justify-center">
+          <div className="asos w-[14rem] h-[18rem] border-1 rounded-2xl flex items-center justify-center">
             <h1>
               aSOS
             </h1>
           </div>
-          <div className="z-3 ssos w-[8rem] h-[8rem] border-1 rounded-2xl flex items-center justify-center">
+          <div className="z-3 ssos w-[14rem] h-[18rem] border-1 rounded-2xl flex items-center justify-center">
             <h1>
               sSOS
             </h1>
           </div>
         </div>
-      </div>
+        </div>
 
-      {/* creating an post */}
+        {/* creating an post */}
       <div className="create-post w-full flex items-center justify-center py-16">
 
         <div className="relative post w-[70%] h-fit border-4 border-orange-600 rounded-2xl py-8 px-8 items-center flex flex-col">
-            <div className="image w-[50%] px-8 h-full">
-            <img className='w-full h-full' src={Jaapi} alt="Jaapi" srcset="" />
+          <div className="image w-full px-8 h-full flex items-center justify-around">
+            <img className='w-[50%] h-full' src={Jaapi} alt="Jaapi" srcset="" />
+            <div className="details flex flex-col gap-8">
+              <div className="postdetails">
+
+              <h2 className='text-6xl font-extrabold'>জাপি (Jaapi)</h2>
+              <p className='text-2xl font-semibold'>The Traditional Hat of Assam</p>
+              </div>
+              <div className="posterdetails">
+                <h3 className='text-xl font-[500]'>Posted by: <span className='font-bold'>Paramjit Saikia</span> </h3>
+                <p className='text-lg font-extralight'>Location: <span className='font-semibold'>Guwahati, Assam</span> </p>
+                <p className='text-lg font-extralight'>Date: <span className='font-semibold'>20th June, 2024</span> </p>
+              <div className="tags flex gap-4 mt-4">
+                <span className='text-md text-center  bg-green-500 text-black w-fit px-4 rounded-full py-2'>#Culture</span>
+                <span className='text-md text-center  bg-green-500 text-black w-fit px-4 rounded-full py-2'>#Tradition</span>
+                <span className='text-md text-center  bg-green-500 text-black w-fit px-4 rounded-full py-2'>#Assam</span>
+              </div>
+              </div>
+            </div>
           </div>
           <div className="desc w-[90%]">
             <p className="text-2xl text-gray-700">
               <span className='text-3xl font-extrabold text-red-500'>Jaapi</span> is a traditional conical hat from Assam, woven from bamboo and tokou paat (palm leaves). It is often decorated with colorful designs and is a symbol of Assamese culture and hospitality. Jaapi is used by farmers for protection from the sun and rain, and is also presented as a mark of honor during cultural events. The craft of making Jaapi is passed down through generations, reflecting the rich heritage and artistry of Assam. Its unique shape and vibrant patterns make it an iconic representation of Assamese identity.
             </p>
           </div>
-        
+
           <button className='absolute animate-bounce left-[95%] top-[90%] p-4 rounded-full bg-[#000] text-white hover:bg-red-600 active:scale-90 transition-all duration-150 ease-in-out cursor-pointer'>
             <Plus size={64} />
           </button>
@@ -170,6 +237,7 @@ const Home = () => {
       </div>
 
 
+      {/* sSOS  */}
       <div className="asos w-full flex items-center justify-center py-16">
         <div className=" post w-[95%] h-[30rem] border-6 bg-[#5b7742] border-black rounded-2xl py-3 px-8 items-center flex ">
           <div className="desc w-full flex flex-col gap-4 px-4 items-center" >

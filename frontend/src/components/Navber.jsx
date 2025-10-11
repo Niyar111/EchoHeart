@@ -2,8 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Search, CircleUserRound } from 'lucide-react';
 const Navber = ({ onSearchClick }) => {
+  
   return (
-    <section className='fixed top-3 z-50 w-[70%] h-18 flex justify-between items-center bg-white/30 backdrop-blur-lg border-black border-2 rounded-full px-10'>
+    <section className={`hidden fixed top-3 z-50 w-[70%] h-18  justify-between items-center bg-white/30 backdrop-blur-lg border-black border-2 rounded-full px-10`}>
       <div className="logo font-serif text-2xl font-extrabold">
         <h1>.exp</h1>
       </div>

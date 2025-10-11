@@ -1,45 +1,43 @@
 import React from 'react'
-import Jaapi from "../assets/Gapi.png"
 import { Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import posts from '../utils/posts'
+
 const Explore = () => {
+  const navigate = useNavigate();
+
+  const handlePostClick = (postId) => {
+    navigate(`/blog/${postId}`);
+  };
+
   return (
-    <section className='w-full h-screen flex items-center justify-center'>
-<div className="mt-[2rem] items w-[95%] rounded-2xl h-[82%] shadow-md shadow-black border-2 border-black grid grid-cols-6 grid-rows-6">
-  <div className="library  col-span-4 row-span-4 rounded-2xl items-center">
-    <div className="items grid-cols-2 grid gap-8  w-[90%]  items-center ">
-              <div className="group item items-center justify-center flex flex-col gap-4 w-full cursor-pointer">
-                <img className='group-hover:scale-110 transition-transform duration-300 ease-in-out w-[50%] drop-shadow-xl drop-shadow-orange-700' src={Jaapi} alt="" srcset="" />
-              </div>
-    
-              <div className="group item items-center justify-center flex flex-col gap-4 w-full cursor-pointer">
-                <img className='group-hover:scale-110 transition-transform duration-300 ease-in-out w-[50%] drop-shadow-xl drop-shadow-orange-700' src={Jaapi} alt="" srcset="" />
-              </div>
-    
-              <div className="group item items-center justify-center flex flex-col gap-4 w-full cursor-pointer">
-                <img className='group-hover:scale-110 transition-transform duration-300 ease-in-out w-[50%] drop-shadow-xl drop-shadow-orange-700' src={Jaapi} alt="" srcset="" />
-              </div>
-    
-              <div className="group item items-center justify-center flex flex-col gap-4 w-full cursor-pointer">
-                <img className='group-hover:scale-110 transition-transform duration-300 ease-in-out w-[50%] drop-shadow-xl drop-shadow-orange-700' src={Jaapi} alt="" srcset="" />
-              </div>
-    
-    
-    
+    <section className='w-full h-screen flex flex-col items-center justify-center'>
+      <div className="search w-[90%] h-[3.5rem] flex items-center justify-between border-1 border-[#999595] rounded-full gap-4 bg-white">
+        <div className='flex items-center w-full gap-1'>
+          <div className='py-2 px-4 text-black rounded-l-full'>
+            <Search />
+          </div>
+          <input type="text" placeholder="Find your interest...." className='outline-none border-none' />
+        </div>
+      </div>
+      <div className="mt-[2rem] items w-[95%] h-[82%] rounded-2xl overflow-hidden border-1 border-[#999595] grid grid-cols-6 grid-rows-6">
+        {posts.map((post) => (
+          <div
+            key={post.id}
+            className="posts group relative col-span-2 row-span-3 flex items-center justify-center p-4 transition-shadow duration-300 ease-in-out overflow-hidden cursor-pointer"
+            onClick={() => handlePostClick(post.id)}
+          >
+            <img
+              className='group-hover:scale-110 transition-transform duration-300 ease-in-out flex justify-end object-cover w-full h-full'
+              src={post.image}
+              alt={post.title}
+            />
+            <div className="details absolute hover:flex items-end justify-center z-3 w-full h-full  hidden group-hover:block bg-gradient-to-t from-white to-transparent p-4 text-black">
+              <h2 className='text-3xl font-bold text-[#aa0000] flex'>{post.title}</h2>
             </div>
-  </div>
-<div className="touristGuide bg-green-400 items-center col-start-5 col-span-2 row-span-2">
-  <h1>touristGuide</h1>
-</div>
-<div className="search group hover:bg-[#00aeff] rounded-xl flex flex-col justify-center items-center w-full h-full col-start-5 col-span-2 row-span-2 cursor-pointer">
-  <Search className='group-hover:text-white group-hover:scale-50 transition-transform duration-500' size={200}/>
-  <p className='hidden group-hover:block group-hover:scale-100 text-4xl text-white text-center'>search</p>
-</div>
-<div className="create bg-red-400 col-start-5 col-span-2 row-span-2"></div>
-<div className="sSOS bg-orange-400 col-start-3 row-start-5 col-span-2 row-span-2"></div>
-<div className="aSOS bg-pink-400 col-start-1 row-start-5 col-span-2 row-span-2"></div>
-</div>
-
-
+          </div>
+        ))}
+      </div>
     </section>
   )
 }

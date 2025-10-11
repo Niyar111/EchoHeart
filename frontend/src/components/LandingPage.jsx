@@ -13,7 +13,7 @@ This component is self-contained for layout and animations.
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import { Link } from "react-router-dom";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function LegacyLibraryLanding() {
@@ -155,8 +155,7 @@ export default function LegacyLibraryLanding() {
       <header className="fixed w-full z-30 bg-transparent">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-md bg-slate-800 text-white flex items-center justify-center font-semibold">LL</div>
-            <div className="font-medium">Legacy Library</div>
+            <div className="font-medium">.exp</div>
           </div>
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
@@ -165,6 +164,15 @@ export default function LegacyLibraryLanding() {
             <a href="#alerts" className="hover:underline">{t("Alerts","अलर्ट","বাৰ্তা")}</a>
             <a href="#sos" className="hover:underline">{t("SOS","SOS","SOS")}</a>
             <a href="#contact" className="hover:underline">{t("Contact","संपर्क","যোগাযোগ")}</a>
+            <Link
+            className="border-1 border-black rounded-md px-2 py-1 hover:scale-105 transition-transform duration-500"
+            to="/sign-in"
+            >Sign in</Link>
+            <Link
+              className="border-1 bg-black text-white rounded-md px-2 py-1 hover:scale-105 transition-transform duration-500"
+            to="/sign-up"
+            >Sign up</Link>
+            
             <div className="ml-4 flex items-center gap-2">
               <button onClick={() => toggleLang("en")} className={`px-2 py-1 rounded ${lang === "en" ? "bg-slate-800 text-white" : "bg-transparent"}`}>EN</button>
               <button onClick={() => toggleLang("hi")} className={`px-2 py-1 rounded ${lang === "hi" ? "bg-slate-800 text-white" : "bg-transparent"}`}>HI</button>

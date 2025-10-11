@@ -37,9 +37,9 @@ exports.register = async (req, res) => {
         user.isPhoneVerified = false;
         await user.save();
 
-    // Log OTP to console for testing and send via SMS if configured
-    console.log(`[OTP] (register) Phone: ${user.phoneNumber} | OTP: ${otp}`);
-    await sendSms(user.phoneNumber, `[EchoHeart] Your verification code is: ${otp}. It expires in 10 minutes.`);
+        // Log OTP to console for testing and send via SMS if configured
+        console.log(`[OTP] (register) Phone: ${user.phoneNumber} | OTP: ${otp}`);
+        await sendSms(user.phoneNumber, `[EchoHeart] Your verification code is: ${otp}. It expires in 10 minutes.`);
 
         res.status(200).json({ success: true, message: 'OTP sent. Verify the phone number using /api/auth/verify' });
 
@@ -65,26 +65,26 @@ exports.requestLoginOtp = async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found. Please register first.' });
         }
-        
+
         if (!user.isPhoneVerified) {
             return res.status(400).json({ msg: 'User registration not complete. Please verify your phone number via OTP first.' });
         }
 
         // 2. Generate and store new OTP for login
         const otp = generateOTP();
-        const phoneOtpExpires = Date.now() + 5 * 60 * 1000; 
+        const phoneOtpExpires = Date.now() + 5 * 60 * 1000;
 
         user.phoneOtp = otp;
         user.phoneOtpExpires = phoneOtpExpires;
         await user.save();
 
-    // 3. Log OTP to console for testing and Send the OTP via SMS
-    console.log(`[OTP] (login) Phone: ${user.phoneNumber} | OTP: ${otp}`);
-    await sendSms(user.phoneNumber, `[EchoHeart] Your login code is: ${otp}. It expires in 5 minutes.`);
+        // 3. Log OTP to console for testing and Send the OTP via SMS
+        console.log(`[OTP] (login) Phone: ${user.phoneNumber} | OTP: ${otp}`);
+        await sendSms(user.phoneNumber, `[EchoHeart] Your login code is: ${otp}. It expires in 5 minutes.`);
 
-        res.status(200).json({ 
-            success: true, 
-            message: 'Login OTP sent successfully. Proceed to verification.' 
+        res.status(200).json({
+            success: true,
+            message: 'Login OTP sent successfully. Proceed to verification.'
         });
 
     } catch (err) {
@@ -101,7 +101,7 @@ exports.verifyOtp = async (req, res) => {
         const { phoneNumber, otp } = req.body;
 
         // 1. Find user and check OTP expiry
-        const user = await User.findOne({ 
+        const user = await User.findOne({
             phoneNumber: phoneNumber,
             phoneOtpExpires: { $gt: Date.now() }
         }).select('+phoneOtp');
@@ -123,14 +123,20 @@ exports.verifyOtp = async (req, res) => {
         if (profileComplete) {
             // Issue JWT (this covers both login and verified existing users)
             const payload = { id: user.id, role: user.role };
+            const jwtSecret = process.env.JWT_SECRET || 'dev-secret-key-change-in-production';
+
+            if (!process.env.JWT_SECRET) {
+                console.warn('⚠️ JWT_SECRET not set in environment variables. Using development fallback.');
+            }
+
             const token = await new Promise((resolve, reject) => {
-                jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' }, (err, result) => {
+                jwt.sign(payload, jwtSecret, { expiresIn: '7d' }, (err, result) => {
                     if (err) reject(err);
                     resolve(result);
                 });
             });
 
-            return res.json({ 
+            return res.json({
                 token,
                 message: 'Verification successful. User logged in.',
                 user: {
@@ -184,10 +190,16 @@ exports.completeRegistration = async (req, res) => {
 
         await user.save();
 
-        // Issue JWT
+        // Issue JWT (with fallback for development)
         const payload = { id: user.id, role: user.role };
+        const jwtSecret = process.env.JWT_SECRET || 'dev-secret-key-change-in-production';
+
+        if (!process.env.JWT_SECRET) {
+            console.warn('⚠️ JWT_SECRET not set in environment variables. Using development fallback.');
+        }
+
         const token = await new Promise((resolve, reject) => {
-            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' }, (err, result) => {
+            jwt.sign(payload, jwtSecret, { expiresIn: '7d' }, (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             });
