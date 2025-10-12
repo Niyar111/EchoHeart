@@ -10,6 +10,7 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString()
 // ----------------------------------------------------------------------
 exports.register = async (req, res) => {
     try {
+        console.log('Register called with body:', req.body);
         const { phoneNumber } = req.body;
 
         if (!phoneNumber) {
@@ -44,7 +45,7 @@ exports.register = async (req, res) => {
         res.status(200).json({ success: true, message: 'OTP sent. Verify the phone number using /api/auth/verify' });
 
     } catch (err) {
-        console.error('Registration Error:', err);
+        console.error('Registration Error:', err && err.stack ? err.stack : err);
         if (err && err.code === 11000) {
             // Duplicate key error (could be from unique indexes like firebaseUid)
             return res.status(400).json({ msg: 'Registration failed: duplicate key detected. Please contact support or try a different phone number.' });

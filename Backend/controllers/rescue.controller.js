@@ -1,4 +1,4 @@
-const RescueContact = require('../models/rescueContact.model'); // Your Mongoose model
+const RescueContact = require('../models/rescueContact.model'); 
 const { validationResult } = require('express-validator'); // Useful for future request body validation
 
 // ----------------------------------------------------------------------
@@ -94,7 +94,7 @@ exports.getContactsByDistrict = async (req, res) => {
 exports.updateContact = async (req, res) => {
     try {
         const contactId = req.params.id;
-        const updates = req.body;
+        const updates = req.body;4
 
         const updatedContact = await RescueContact.findByIdAndUpdate(
             contactId,
@@ -144,4 +144,4 @@ exports.deactivateContact = async (req, res) => {
         console.error('Error deactivating contact:', err.message);
         res.status(500).send('Server Error during contact deactivation.');
     }
-};
+}; 

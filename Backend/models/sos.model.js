@@ -21,7 +21,7 @@ const sosSchema = new mongoose.Schema({
   alertType: {
     type: String,
     required: true,
-    enum: ['flood', 'earthquake', 'landslide', 'personal-safety'],
+    enum: ['flood', 'earthquake', 'landslide','personal-saftey'],
   },
   message: {
     type: String,
